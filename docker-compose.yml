@@ -9,6 +9,8 @@ services:
       - mysql_data:/var/lib/mysql
     ports:
       - "3306:3306"
+    networks:
+      - notes-app
     healthcheck:
       test: ["CMD-SHELL", 'mysqladmin ping']
       interval: 10s
@@ -20,13 +22,15 @@ services:
     container_name: notes-app-rest
     ports:
       - "8080:8080"
-    depends_on:
-      - mysql
     environment:
       DB_HOST: mysql
       DB_USER: root
       DB_PASSWORD: root
       DB_NAME: notesdb
+    depends_on:
+      - mysql
+    networks:
+      - notes-app
 
   frontend:
     build: ./notes-app-web
@@ -35,6 +39,12 @@ services:
       - "9000:80"
     depends_on:
       - backend
+    networks:
+      - notes-app
 
 volumes:
   mysql_data:
+
+networks:
+  notes-app:
+    name: notes-app

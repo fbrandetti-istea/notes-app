@@ -1,4 +1,4 @@
-# My Keep Clone
+# Google Keep Clone
 
 Esta es una mini aplicación de notas al estilo Google Keep.
 La aplicación permite crear y eliminar notas, mostrándolas con un diseño responsivo.
@@ -7,7 +7,7 @@ La aplicación permite crear y eliminar notas, mostrándolas con un diseño resp
 
 ## Funcionalidades
 
-- Crear y eliminar notas.
+- Crear, editar y eliminar notas.
 - Diseño responsivo similar a Google Keep.
 - Backend en Node.js + Express con MySQL.
 - Frontend en HTML + Javascript.
@@ -33,10 +33,10 @@ Para poder correr la aplicación vas a necesitar lo siguiente:
 docker compose up --build
 ```
 
-Esto iniciará:
+Esto va a levantar los siguientes contenedores debajo de la red **notes-app**:
 
 - `mysql` → Base de datos MySQL
-- `rest` → API Node.js en el puerto **8080**
+- `rest` → REST API en el puerto **8080**
 - `web` → Aplicación web en el puerto **9000**
 
 3. **Abrir la aplicación en el navegador**
@@ -48,10 +48,10 @@ http://localhost:9000
 4. **Acceder a la API directamente (opcional)**
 Se puede acceder a la REST API directamente llamando a cualquiera de los siguientes endpoints:
 
-- Listar notas: `GET http://localhost:8080/api/notas`
-- Agregar nota: `POST http://localhost:8080/api/notas`
-- Actualizar nota: `PUT http://localhost:8080/api/notas/:id`
-- Eliminar nota: `DELETE http://localhost:8080/api/notas/:id`
+- Listar notas: `GET http://localhost:8080/api/notes`
+- Agregar nota: `POST http://localhost:8080/api/notes`
+- Editar nota: `PUT http://localhost:8080/api/notes/:id`
+- Eliminar nota: `DELETE http://localhost:8080/api/notes/:id`
 
 ## Créditos
 Aplicación realizada por Franco Brandetti para trabajo evaluativo de Ingeniería del Software de ISTEA.
