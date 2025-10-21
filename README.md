@@ -1,7 +1,7 @@
 # Google Keep Clone
 
 Esta es una mini aplicación de notas al estilo Google Keep.
-La aplicación permite crear y eliminar notas, mostrándolas con un diseño responsivo.
+La aplicación permite crear, editar y eliminar notas, mostrándolas con un diseño responsivo.
 
 ---
 
