@@ -119,8 +119,24 @@
       </div>
     </div>
   </div>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
+  <div class="modal fade" id="alert-modal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content border-warning">
+        <div class="modal-header bg-warning text-dark">
+          <h5 class="modal-title" id="alert-modal-title"></h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body" id="alert-modal-body"></div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" id="alert-modal-cancel-btn">Cancelar</button>
+          <button type="button" class="btn btn-warning" id="alert-modal-ok-btn">Continuar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
   <script>
     const API_URL = "http://localhost:8080/api/notes";
     const form = document.getElementById("note-form");
@@ -145,7 +161,7 @@
             <button onclick="editNoteModalOpen(${note.id}, '${escapeJS(note.title).trim()}', '${escapeJS(note.content).trim()}')">
               <i class="bi bi-pencil"></i>
             </button>
-            <button onclick="deleteNote(${note.id})">
+            <button onclick="showDeleteConfirmation(${note.id})">
               <i class="bi bi-trash"></i>
             </button>
           </div>
@@ -208,8 +224,14 @@
     // ---------------------------------------------
 
     // Delete note section
+    function showDeleteConfirmation(id) {
+      showAlertModal("¿Desea borrar esta nota?", "", true, 
+        () => deleteNote(id), 
+        () => {}
+      );
+    }
+
     async function deleteNote(id) {
-      if (!confirm("¿Desea borrar esta nota?")) return;
       await fetch(`${API_URL}/${id}`, { method: "DELETE" });
       getNotes();
     }
@@ -218,12 +240,18 @@
     // Helper section
     function validateNote(title, content) {
       if (title === "") {
-        alert("El título de la nota no puede estar vacío.");
+        showAlertModal("Error", "El título de la nota no puede estar vacío.", false, 
+          () => {}, 
+          () => {}
+        );
         return false;
       }
 
       if (content === "") {
-        alert("El contenido de la nota no puede estar vacío.");
+        showAlertModal("Error", "El contenido de la nota no puede estar vacío.", false, 
+          () => {}, 
+          () => {}
+        );
         return false;
       }
 
@@ -237,6 +265,32 @@
                 .replace(/\n/g, "\\n")
                 .replace(/\r/g, "\\r");
     }
+
+    const alertModalElement = document.getElementById("alert-modal");
+    const alertModal = new bootstrap.Modal(alertModalElement);
+    const alertModalOkBtn = document.getElementById("alert-modal-ok-btn");
+    const alertModalCancelBtn = document.getElementById("alert-modal-cancel-btn");
+    let onOkCallback = null;
+    let onCancelCallback = null;
+
+    function showAlertModal(title, message, showCancel, onOk, onCancel) {
+      document.getElementById("alert-modal-title").textContent = title;
+      document.getElementById("alert-modal-body").textContent = message;
+      document.getElementById("alert-modal-cancel-btn").style.display = showCancel ? "inline-block" : "none";
+      onOkCallback = onOk;
+      onCancelCallback = onCancel;
+      alertModal.show();
+    }
+
+    alertModalOkBtn.addEventListener("click", () => {
+      onOkCallback();
+      alertModal.hide();
+    });
+
+    alertModalCancelBtn.addEventListener("click", () => {
+      onCancelCallback();
+      alertModal.hide();
+    });
     // ---------------------------------------------
 
     getNotes();
